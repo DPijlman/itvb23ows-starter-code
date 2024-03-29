@@ -2,6 +2,7 @@
     session_start();
 
     include_once 'util.php';
+    include_once 'hiveGame.php';
 
     if (!isset($_SESSION['board'])) {
         header('Location: restart.php');
@@ -11,63 +12,7 @@
     $player = $_SESSION['player'];
     $hand = $_SESSION['hand'];
 
-    function validPlacementCheck($position, $board) {
-        $coordinates = explode(',', $position);
-        $x = intval($coordinates[0]);
-        $y = intval($coordinates[1]);
-
-        foreach ($GLOBALS['OFFSETS'] as $pq) {
-            $adjX = $x + $pq[0];
-            $adjY = $y + $pq[1];
-            $adjacentPosition = $adjX . ',' . $adjY;
-
-            if (isset($board[$adjacentPosition])) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    function getPossiblePlacements($board) {
-        $possiblePlacements = [];
-
-        foreach (array_keys($board) as $pos) {
-            $coordinates = explode(',', $pos);
-            $x = intval($coordinates[0]);
-            $y = intval($coordinates[1]);
-
-            foreach ($GLOBALS['OFFSETS'] as $pq) {
-                $adjX = $x + $pq[0];
-                $adjY = $y + $pq[1];
-                $adjacentPosition = $adjX . ',' . $adjY;
-
-                // Check if the position is valid and add it to possible placements
-                if (validPlacementCheck($adjacentPosition, $board)) {
-                    $possiblePlacements[] = $adjacentPosition;
-                }
-            }
-        }
-
-        if (empty($possiblePlacements)) {
-            $possiblePlacements[] = '0,0'; // Default position if no other valid placements
-        }
-
-        return $possiblePlacements;
-    }
-
-    // Get possible placements for the current player's hand
     $to = getPossiblePlacements($board);
-    /* foreach ($GLOBALS['OFFSETS'] as $pq) {
-        foreach (array_keys($board) as $pos) {
-            $pq2 = explode(',', $pos);
-            $to[] = ($pq[0] + $pq2[0]).','.($pq[1] + $pq2[1]);
-        }
-    }
-    $to = array_unique($to);
-    if (!count($to)) {
-        $to[] = '0,0';
-    } */
 ?>
 <!DOCTYPE html>
 <html lang=”en” xml:lang="en">
