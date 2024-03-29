@@ -13,21 +13,17 @@ function setState($state) {
 
 $servername = "ows-db";
 $username = "root";
-$password = getenv("Ows1234root");
+$password = "Ows1234root";
 $database = "hive";
 
-// Create a new mysqli connection with character set specified
 $conn = new mysqli($servername, $username, $password, $database);
 
-// Check for connection errors
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Set the character set for the connection to utf8mb4
-if (!$conn->set_charset("utf8mb4")) {
-    die("Error setting charset: " . $conn->error);
+if (!mysqli_set_charset($conn, "utf8mb4")) {
+    die("Error setting charset: " . mysqli_error($conn));
 }
 
-// Return the connection
 return $conn;

@@ -3,6 +3,7 @@
 
     include_once 'util.php';
     include_once 'hiveGame.php';
+    include_once 'database.php';
 
     if (!isset($_SESSION['board'])) {
         header('Location: restart.php');
