@@ -17,4 +17,3 @@ $password = getenv("Ows1234root");
 $database = "hive";
 
 $conn = new mysqli($servername, $username, $password, $database);
-//return new mysqli('ows-db', 'root', 'Ows1234root', 'hive');
