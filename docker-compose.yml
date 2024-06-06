@@ -1,0 +1,65 @@
+version: '3'
+
+services:
+  hive_game:
+    build: ./app/
+    container_name: ows-php1
+    restart: always
+    environment:
+      - DATABASE_HOST=database
+      - DATABASE_PORT=3306
+      - DATABASE_NAME=hive
+      - DATABASE_USER=owsuser
+      - DATABASE_PASSWORD=Ows1234user
+    command: php -S 0.0.0.0:80
+    ports:
+      - "8000:80"
+    volumes:
+      - ./app:/var/www/html
+    networks:
+      - owsnetwork
+
+  database:
+    build: ./db/
+    container_name: ows-db1
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=Ows1234root
+      - MYSQL_DATABASE=hive
+      - MYSQL_USER=owsuser
+      - MYSQL_PASSWORD=Ows1234user
+    volumes:
+      - ./db/hive.sql:/docker-entrypoint-initdb.d/hive.sql
+    networks:
+      - owsnetwork
+
+  jenkins:
+    build: ./jenkins/
+    container_name: jenkins
+    restart: always
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins-data:/var/jenkins_home
+    networks:
+      - owsnetwork
+
+  sonarqube:
+    image: sonarqube:latest
+    container_name: sonarqube1
+    restart: always
+    ports:
+      - "9000:9000"
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+    networks:
+      - owsnetwork
+    
+volumes:
+  jenkins-data:
+
+networks:
+  owsnetwork:

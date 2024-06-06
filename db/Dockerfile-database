@@ -1,9 +1,0 @@
-FROM mysql:8.0.33
-
-ENV MYSQL_DATABASE=hive
-ENV MYSQL_ROOT_USER=root
-ENV MYSQL_ROOT_PASSWORD=Ows1234root
-
-COPY hive.sql /docker-entrypoint-initdb.d/
-
-EXPOSE 3307
