@@ -6,3 +6,4 @@ composer.lock
 /app/src/vendor/*
 !/app/src/vendor/phpunit/
 !/app/src/vendor/autoload.php
+!/app/src/vendor/composer
