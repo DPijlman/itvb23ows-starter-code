@@ -8,20 +8,16 @@ class HiveGame {
     public function play($piece, $to) {
         $board = $_SESSION['board'];
         $player = $_SESSION['player'];
+        $hand = &$_SESSION['hand'];
 
         if (empty($board)) {
             $board[$to] = [[$player, $piece]];
             $_SESSION['board'] = $board;
-            
-            try {
-                $db = Database::getConnection();
-                $stmt = $db->prepare('INSERT INTO moves (game_id, type, move_to, state) VALUES (?, ?, ?, ?)');
-                $state = json_encode($board);
-                $stmt->bind_param('isss', $_SESSION['game_id'], $piece, $to, $state);
-                $stmt->execute();
-            } catch (Exception $e) {
-                $_SESSION['error'] = "Database error: " . $e->getMessage();
-                return;
+            $this->recordMove($piece, $to, $board);
+
+            $hand[$player][$piece]--;
+            if ($hand[$player][$piece] == 0) {
+                unset($hand[$player][$piece]);
             }
 
             $_SESSION['player'] = 1 - $player;
@@ -35,16 +31,11 @@ class HiveGame {
                 }
                 $board[$to][] = [$player, $piece];
                 $_SESSION['board'] = $board;
+                $this->recordMove($piece, $to, $board);
 
-                try {
-                    $db = Database::getConnection();
-                    $stmt = $db->prepare('INSERT INTO moves (game_id, type, move_to, state) VALUES (?, ?, ?, ?)');
-                    $state = json_encode($board);
-                    $stmt->bind_param('isss', $_SESSION['game_id'], $piece, $to, $state);
-                    $stmt->execute();
-                } catch (Exception $e) {
-                    $_SESSION['error'] = "Database error: " . $e->getMessage();
-                    return;
+                $hand[$player][$piece]--;
+                if ($hand[$player][$piece] == 0) {
+                    unset($hand[$player][$piece]);
                 }
 
                 $_SESSION['player'] = 1 - $player;
@@ -55,26 +46,41 @@ class HiveGame {
         }
     }
 
+    private function recordMove($piece, $to, $board) {
+        try {
+            $db = Database::getConnection();
+            $stmt = $db->prepare('INSERT INTO moves (game_id, type, move_to, state) VALUES (?, ?, ?, ?)');
+            $state = json_encode($board);
+            $stmt->bind_param('isss', $_SESSION['game_id'], $piece, $to, $state);
+            $stmt->execute();
+        } catch (Exception $e) {
+            $_SESSION['error'] = "Database error: " . $e->getMessage();
+        }
+    }
+
     public function move($from, $to) {
         $board = $_SESSION['board'];
         if (Util::slide($board, $from, $to)) {
             $board[$to][] = array_pop($board[$from]);
             $_SESSION['board'] = $board;
 
-            try {
-                $db = Database::getConnection();
-                $stmt = $db->prepare('INSERT INTO moves (game_id, type, move_from, move_to, state) VALUES (?, ?, ?, ?, ?)');
-                $state = json_encode($board);
-                $stmt->bind_param('issss', $_SESSION['game_id'], 'move', $from, $to, $state);
-                $stmt->execute();
-            } catch (Exception $e) {
-                $_SESSION['error'] = "Database error: " . $e->getMessage();
-                return;
-            }
+            $this->recordMove('move', $to, $board, $from);
 
             $_SESSION['player'] = 1 - $_SESSION['player'];
         } else {
             $_SESSION['error'] = "Invalid move: Slide not possible.";
+        }
+    }
+
+    private function recordMoveWithFrom($type, $to, $board, $from) {
+        try {
+            $db = Database::getConnection();
+            $stmt = $db->prepare('INSERT INTO moves (game_id, type, move_from, move_to, state) VALUES (?, ?, ?, ?, ?)');
+            $state = json_encode($board);
+            $stmt->bind_param('issss', $_SESSION['game_id'], $type, $from, $to, $state);
+            $stmt->execute();
+        } catch (Exception $e) {
+            $_SESSION['error'] = "Database error: " . $e->getMessage();
         }
     }
 

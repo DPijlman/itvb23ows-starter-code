@@ -2,10 +2,10 @@
 session_start();
 require_once __DIR__ . '/vendor/autoload.php';
 
-use App\database\database;
-use App\classes\gameState;
-use App\classes\hiveGame;
-use App\classes\util;
+use App\database\Database;
+use App\classes\GameState;
+use App\classes\HiveGame;
+use App\classes\Util;
 
 if (!isset($_SESSION['board'])) {
     header('Location: restart.php');
@@ -136,7 +136,10 @@ if (!count($to)) $to[] = '0,0';
     <select name="from">
         <?php
         foreach (array_keys($board) as $pos) {
-            echo "<option value=\"$pos\">$pos</option>";
+            // Filter out opponent's tiles
+            if ($board[$pos][count($board[$pos]) - 1][0] == $player) {
+                echo "<option value=\"$pos\">$pos</option>";
+            }
         }
         ?>
     </select>

@@ -1,44 +1,35 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-
-include_once 'hiveGame.php';
+use App\classes\HiveGame;
 
 class HiveGameTest extends TestCase
 {
-    // Test valid options for placing a tile
-    public function testValidTilePlacements()
+    protected function setUp(): void
     {
-        // Arrange
-        $board = [
-            '0,0' => [['player' => 0, 'type' => 'queen_bee']], // White queen bee at 0,0
-            '1,-1' => [['player' => 1, 'type' => 'beetle']] // Black beetle at 1,-1
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $_SESSION['board'] = [];
+        $_SESSION['hand'] = [
+            0 => ["Q" => 1, "B" => 2, "S" => 2, "A" => 3, "G" => 3],
+            1 => ["Q" => 1, "B" => 2, "S" => 2, "A" => 3, "G" => 3]
         ];
-
-        // Act
-        $actualValidOptions = getPossiblePlacements($board);
-
-        // Assert
-        $expectedValidOptions = ['0,1', '1,0', '-1,0', '-1,1', '2,0', '0,0', '0,-1', '2,-1'];
-        $this->assertEquals($expectedValidOptions, $actualValidOptions);
+        $_SESSION['player'] = 0;
+        $_SESSION['game_id'] = 1;
     }
 
-    // Test invalid options for placing a tile
-    public function testInvalidTilePlacements()
+    public function testAvailableTiles()
     {
         // Arrange
-        $board = [
-            '0,0' => [['player' => 0, 'type' => 'queen_bee']], // White queen bee at 0,0
-            '1,-1' => [['player' => 1, 'type' => 'beetle']] // Black beetle at 1,-1
-        ];
+        $hiveGame = new HiveGame();
 
         // Act
-        $actualValidOptions = getPossiblePlacements($board);
+        $hiveGame->play('Q', '0,0');
 
         // Assert
-        $expectedInvalidOptions = ['1,1', '0,-2', '3,0', '-2,1'];
-        foreach ($expectedInvalidOptions as $option) {
-            $this->assertNotContains($option, $actualValidOptions);
-        }
+        $this->assertEquals(0, $_SESSION['hand'][0]['Q'], "Expected Queen count in player 0's hand to be 0");
+        $this->assertArrayNotHasKey('Q', $_SESSION['hand'][0], "Expected Queen to be removed from player 0's hand");
     }
 }
