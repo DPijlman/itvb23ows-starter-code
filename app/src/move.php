@@ -2,7 +2,10 @@
 session_start();
 require_once __DIR__ . '/vendor/autoload.php';
 
-use App\classes\hiveGame;
+use App\classes\HiveGame;
 
-$hiveGame = new hiveGame();
+$hiveGame = new HiveGame();
 $hiveGame->move($_POST['from'], $_POST['to']);
+
+header('Location: index.php');
+exit();
