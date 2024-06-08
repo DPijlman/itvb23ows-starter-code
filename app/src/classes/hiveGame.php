@@ -10,6 +10,20 @@ class HiveGame {
         $player = $_SESSION['player'];
         $hand = &$_SESSION['hand'];
 
+        if (!isset($_SESSION['turns'])) {
+            $_SESSION['turns'] = [0, 0];
+        }
+
+        $_SESSION['turns'][$player]++;
+        $totalTurns = array_sum($_SESSION['turns']);
+        $queenNotPlayed = !isset($hand[$player]['Q']) || $hand[$player]['Q'] > 0;
+        if ($_SESSION['turns'][$player] >= 4 && $queenNotPlayed) {
+            if ($piece !== 'Q') {
+                $_SESSION['error'] = "You must play your Queen Bee by the 4th turn.";
+                return;
+            }
+        }
+
         if (empty($board)) {
             $board[$to] = [[$player, $piece]];
             $_SESSION['board'] = $board;
@@ -60,18 +74,13 @@ class HiveGame {
 
     public function move($from, $to) {
         $board = $_SESSION['board'];
-        error_log("Move Debug: Attempting to move from $from to $to.");
         if (Util::slide($board, $from, $to)) {
-            if (!isset($board[$to])) {
-                $board[$to] = [];
-            }
             $board[$to][] = array_pop($board[$from]);
             $_SESSION['board'] = $board;
 
             $this->recordMoveWithFrom('move', $to, $board, $from);
 
             $_SESSION['player'] = 1 - $_SESSION['player'];
-            $_SESSION['message'] = "Move successful.";
         } else {
             $_SESSION['error'] = "Invalid move: Slide not possible.";
         }
@@ -96,10 +105,12 @@ class HiveGame {
             1 => ["Q" => 1, "B" => 2, "S" => 2, "A" => 3, "G" => 3]
         ];
         $_SESSION['player'] = 0;
+        $_SESSION['turns'] = [0, 0];
 
         try {
             $db = Database::getConnection();
-            $db->query('DELETE FROM moves WHERE game_id = ' . $_SESSION['game_id']);
+            $db->prepare('INSERT INTO games () VALUES ()')->execute();
+            $_SESSION['game_id'] = $db->insert_id;
         } catch (Exception $e) {
             $_SESSION['error'] = "Database error: " . $e->getMessage();
         }
