@@ -58,13 +58,17 @@ class Util {
         $fromNeighbours = self::getNeighbours($from, $board);
         $toNeighbours = self::getNeighbours($to, $board);
 
-        if (count($fromNeighbours) < 1 || count($toNeighbours) < 1) {
-            error_log("Slide Debug: Not enough neighbours in from ($from) or to ($to).");
-            return false;
+        if (count($fromNeighbours) < 2 || count($toNeighbours) < 2) {
+            error_log("Slide Debug: Not enough neighbours to slide.");
+            return true;
         }
 
-        $sharedEdges = array_intersect($fromNeighbours, $toNeighbours);
-        if (count($sharedEdges) == 1) {
+        $fromPos = explode(',', $from);
+        $toPos = explode(',', $to);
+        $deltaP = $toPos[0] - $fromPos[0];
+        $deltaQ = $toPos[1] - $fromPos[1];
+
+        if ($deltaP == 0 || $deltaQ == 0 || abs($deltaP) == abs($deltaQ)) {
             return true;
         }
 
@@ -72,13 +76,13 @@ class Util {
     }
 
     private static function breaksHive($board, $from) {
-        $neighbours = self::getNeighbours($from, $board);
         $visited = [];
-        $toVisit = [$neighbours[0]];
-
-        while (!empty($toVisit)) {
+        $toVisit = [$from];
+        while ($toVisit) {
             $current = array_pop($toVisit);
-            if (isset($visited[$current])) continue;
+            if (isset($visited[$current])) {
+                continue;
+            }
             $visited[$current] = true;
             $currentNeighbours = self::getNeighbours($current, $board);
             foreach ($currentNeighbours as $neighbour) {
@@ -88,7 +92,7 @@ class Util {
             }
         }
 
-        foreach ($neighbours as $neighbour) {
+        foreach (self::getNeighbours($from, $board) as $neighbour) {
             if (!isset($visited[$neighbour])) {
                 return true;
             }

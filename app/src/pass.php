@@ -2,7 +2,7 @@
 session_start();
 require_once __DIR__ . '/vendor/autoload.php';
 
-use App\classes\hiveGame;
+$_SESSION['player'] = 1 - $_SESSION['player'];
 
-$hiveGame = new hiveGame();
-$hiveGame->pass();
+header('Location: index.php');
+exit();

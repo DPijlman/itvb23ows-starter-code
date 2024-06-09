@@ -2,6 +2,7 @@
 namespace App\classes;
 
 use App\database\Database;
+use App\features\Grasshopper;
 use Exception;
 
 class HiveGame {
@@ -62,8 +63,32 @@ class HiveGame {
 
     public function move($from, $to) {
         $board = $_SESSION['board'];
+        $piece = end($board[$from]);
+
+        if ($piece[1] == 'G') {
+            $grasshopper = new Grasshopper();
+            if ($grasshopper->canMove($from, $to, $board)) {
+                array_pop($board[$from]);
+                if (empty($board[$from])) {
+                    unset($board[$from]);
+                }
+                if (!isset($board[$to])) {
+                    $board[$to] = [];
+                }
+                $board[$to][] = $piece;
+                $_SESSION['board'] = $board;
+
+                $this->recordMoveWithFrom('move', $to, $board, $from);
+
+                $_SESSION['player'] = 1 - $_SESSION['player'];
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         if (Util::slide($board, $from, $to)) {
-            $piece = array_pop($board[$from]);
+            array_pop($board[$from]);
             if (empty($board[$from])) {
                 unset($board[$from]);
             }
@@ -76,8 +101,10 @@ class HiveGame {
             $this->recordMoveWithFrom('move', $to, $board, $from);
 
             $_SESSION['player'] = 1 - $_SESSION['player'];
+            return true;
         } else {
             $_SESSION['error'] = "Invalid move: Slide not possible.";
+            return false;
         }
     }
 
