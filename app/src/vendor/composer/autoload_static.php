@@ -7,6 +7,7 @@ namespace Composer\Autoload;
 class ComposerStaticInitf239d0dd1d4ea49378e7d87105f0bddb
 {
     public static $files = array (
+        '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
     );
 
@@ -14,6 +15,10 @@ class ComposerStaticInitf239d0dd1d4ea49378e7d87105f0bddb
         'P' => 
         array (
             'PhpParser\\' => 10,
+        ),
+        'D' => 
+        array (
+            'DeepCopy\\' => 9,
         ),
         'A' => 
         array (
@@ -25,6 +30,10 @@ class ComposerStaticInitf239d0dd1d4ea49378e7d87105f0bddb
         'PhpParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
+        ),
+        'DeepCopy\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
         'App\\' => 
         array (
