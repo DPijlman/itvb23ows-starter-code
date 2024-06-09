@@ -6,3 +6,4 @@
 !/app/src/vendor/autoload.php
 !/app/src/vendor/composer
 !/app/src/vendor/bin
+!/app/src/vendor/myclabs
