@@ -9,7 +9,5 @@ RUN echo "deb [arch=$(dpkg --print-architecture) \
   $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list
 RUN apt-get update && apt-get install -y docker-ce-cli
 
-COPY . /var/jenkins_home/workspace/OWS2/$WORKSPACE/ml/itvb23ows-starter-code
-
-USER jenkins
+USER root
 RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"

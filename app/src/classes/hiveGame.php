@@ -60,6 +60,27 @@ class HiveGame {
         }
     }
 
+    public function move($from, $to) {
+        $board = $_SESSION['board'];
+        if (Util::slide($board, $from, $to)) {
+            $piece = array_pop($board[$from]);
+            if (empty($board[$from])) {
+                unset($board[$from]);
+            }
+            if (!isset($board[$to])) {
+                $board[$to] = [];
+            }
+            $board[$to][] = $piece;
+            $_SESSION['board'] = $board;
+
+            $this->recordMoveWithFrom('move', $to, $board, $from);
+
+            $_SESSION['player'] = 1 - $_SESSION['player'];
+        } else {
+            $_SESSION['error'] = "Invalid move: Slide not possible.";
+        }
+    }
+
     private function recordMove($piece, $to, $board) {
         try {
             $db = Database::getConnection();
@@ -69,20 +90,6 @@ class HiveGame {
             $stmt->execute();
         } catch (Exception $e) {
             $_SESSION['error'] = "Database error: " . $e->getMessage();
-        }
-    }
-
-    public function move($from, $to) {
-        $board = $_SESSION['board'];
-        if (Util::slide($board, $from, $to)) {
-            $board[$to][] = array_pop($board[$from]);
-            $_SESSION['board'] = $board;
-
-            $this->recordMoveWithFrom('move', $to, $board, $from);
-
-            $_SESSION['player'] = 1 - $_SESSION['player'];
-        } else {
-            $_SESSION['error'] = "Invalid move: Slide not possible.";
         }
     }
 
