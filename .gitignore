@@ -1,7 +1,5 @@
 
 /.scannerwork
-composer.json
-composer.lock
 /vendor
 /app/src/vendor/*
 !/app/src/vendor/phpunit/

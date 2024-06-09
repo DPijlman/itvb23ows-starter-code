@@ -27,4 +27,16 @@ class GrasshopperMoveTest extends TestCase {
             "condition is true or false"
         ); 
     }
+
+    public function testGrasshopperCannotJumpToOccupiedSpot() {
+
+    }
+
+    public function testGrasshopperCannotJumpEmptySpots() {
+
+    }
+
+    public function testGrasshopperCannotJumpOnSameSpot() {
+        
+    }
 }
