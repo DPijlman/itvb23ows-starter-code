@@ -3,6 +3,7 @@ namespace App\classes;
 
 use App\database\Database;
 use App\features\Grasshopper;
+use App\features\SoldierAnt;
 use Exception;
 
 class HiveGame {
@@ -68,6 +69,28 @@ class HiveGame {
         if ($piece[1] == 'G') {
             $grasshopper = new Grasshopper();
             if ($grasshopper->canMove($from, $to, $board)) {
+                array_pop($board[$from]);
+                if (empty($board[$from])) {
+                    unset($board[$from]);
+                }
+                if (!isset($board[$to])) {
+                    $board[$to] = [];
+                }
+                $board[$to][] = $piece;
+                $_SESSION['board'] = $board;
+
+                $this->recordMoveWithFrom('move', $to, $board, $from);
+
+                $_SESSION['player'] = 1 - $_SESSION['player'];
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        if ($piece[1] == 'A') {
+            $soldierAnt = new SoldierAnt();
+            if ($soldierAnt->canMove($from, $to, $board)) {
                 array_pop($board[$from]);
                 if (empty($board[$from])) {
                     unset($board[$from]);

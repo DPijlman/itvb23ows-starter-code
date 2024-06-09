@@ -28,10 +28,6 @@ class Util {
             error_log("Slide Debug: Destination $to has no neighbours.");
             return false;
         }
-        if (!self::isNeighbour($from, $to)) {
-            error_log("Slide Debug: $from and $to are not neighbours.");
-            return false;
-        }
 
         if (self::breaksHive($board, $from)) {
             error_log("Slide Debug: Moving from $from to $to would break the hive structure.");
