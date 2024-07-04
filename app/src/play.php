@@ -1,11 +1,14 @@
 <?php
-session_start();
 require_once __DIR__ . '/vendor/autoload.php';
 
-use App\classes\HiveGame;
+use HiveGame\MoveHandler\PlayHandler;
+use HiveGame\Util\SessionManager;
 
-$hiveGame = new HiveGame();
-$hiveGame->play($_POST['piece'], $_POST['to']);
+$piece = $_POST['piece'];
+$to = $_POST['to'];
 
+if (!PlayHandler::play($piece, $to)) {
+    header('Location: index.php');
+    exit();
+}
 header('Location: index.php');
-exit();

@@ -1,8 +1,6 @@
 <?php
-session_start();
 require_once __DIR__ . '/vendor/autoload.php';
 
-use App\classes\hiveGame;
+use HiveGame\MoveHandler\UndoHandler;
 
-$hiveGame = new HiveGame();
-$hiveGame->undo();
+UndoHandler::undo();

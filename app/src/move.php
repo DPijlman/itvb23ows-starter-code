@@ -1,11 +1,6 @@
 <?php
-session_start();
 require_once __DIR__ . '/vendor/autoload.php';
 
-use App\classes\HiveGame;
+use HiveGame\MoveHandler\MoveHandler;
 
-$hiveGame = new HiveGame();
-$hiveGame->move($_POST['from'], $_POST['to']);
-
-header('Location: index.php');
-exit();
+MoveHandler::move($_POST['from'], $_POST['to']);

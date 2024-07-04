@@ -16,13 +16,13 @@ class ComposerStaticInitf239d0dd1d4ea49378e7d87105f0bddb
         array (
             'PhpParser\\' => 10,
         ),
+        'H' => 
+        array (
+            'HiveGame\\' => 9,
+        ),
         'D' => 
         array (
             'DeepCopy\\' => 9,
-        ),
-        'A' => 
-        array (
-            'App\\' => 4,
         ),
     );
 
@@ -31,13 +31,13 @@ class ComposerStaticInitf239d0dd1d4ea49378e7d87105f0bddb
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
         ),
+        'HiveGame\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/',
+        ),
         'DeepCopy\\' => 
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
-        ),
-        'App\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/',
         ),
     );
 

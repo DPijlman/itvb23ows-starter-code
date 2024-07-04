@@ -1,11 +1,9 @@
 <?php
-session_start();
 require_once __DIR__ . '/vendor/autoload.php';
 
-use App\classes\HiveGame;
+use HiveGame\MoveHandler\RestartHandler;
 
-$hiveGame = new HiveGame();
-$hiveGame->restart();
+RestartHandler::restartGame();
 
 header('Location: index.php');
 exit();
