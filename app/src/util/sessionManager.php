@@ -1,5 +1,4 @@
 <?php
-
 namespace HiveGame\Util;
 
 class SessionManager

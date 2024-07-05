@@ -1,8 +1,7 @@
 <?php
+namespace HiveGame\GameState;
 
-namespace App\GameState;
-
-use App\Database\Database;
+use HiveGame\Database\Database;
 
 class GameState {
     public static function getState() {
@@ -16,13 +15,14 @@ class GameState {
     public static function restartGame() {
         $_SESSION['board'] = [];
         $_SESSION['hand'] = [
-            0 => ["Q" => 1, "B" => 2, "S" => 2, "A" => 3, "G" => 3],
-            1 => ["Q" => 1, "B" => 2, "S" => 2, "A" => 3, "G" => 3]
+            0 => ["queen" => 1, "ant" => 3, "spider" => 2, "beetle" => 2, "grasshopper" => 3],
+            1 => ["queen" => 1, "ant" => 3, "spider" => 2, "beetle" => 2, "grasshopper" => 3]
         ];
         $_SESSION['player'] = 0;
 
         $db = Database::getInstance()->getConnection();
-        $db->prepare('INSERT INTO games VALUES ()')->execute();
+        $stmt = $db->prepare('INSERT INTO games () VALUES ()');
+        $stmt->execute();
         $_SESSION['game_id'] = $db->insert_id;
     }
 }

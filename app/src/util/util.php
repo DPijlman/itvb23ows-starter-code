@@ -21,4 +21,22 @@ class Util {
         if (abs($a[0] - $b[0]) == 1 && abs($a[1] - $b[1]) == 1) return true;
         return false;
     }
+
+    public static function slide($board, $from, $to) {
+        // Ensure $from is a valid position on the board and $to is a valid move destination
+        if (!isset($board[$from])) {
+            return false;
+        }
+
+        // Move the top piece from $from to $to
+        $piece = array_pop($board[$from]);
+        $board[$to][] = $piece;
+
+        // Remove the $from position if it is empty
+        if (empty($board[$from])) {
+            unset($board[$from]);
+        }
+
+        return $board;
+    }
 }
