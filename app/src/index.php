@@ -3,7 +3,6 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use HiveGame\Util\SessionManager;
 use HiveGame\Util\Util;
-use HiveGame\Database\Database;
 
 SessionManager::startSession();
 
@@ -21,7 +20,10 @@ $to = [];
 foreach (Util::$OFFSETS as $pq) {
     foreach ($board_keys as $pos) {
         $pq2 = explode(',', $pos);
-        $to[] = ($pq[0] + $pq2[0]) . ',' . ($pq[1] + $pq2[1]);
+        $new_pos = ($pq[0] + $pq2[0]) . ',' . ($pq[1] + $pq2[1]);
+        if (!isset($board[$new_pos]) || empty($board[$new_pos])) {
+            $to[] = $new_pos;
+        }
     }
 }
 $to = array_unique($to);
@@ -131,14 +133,20 @@ if (!count($to)) $to[] = '0,0';
         <select name="piece">
             <?php
             foreach ($hand[$player] as $tile => $ct) {
-                echo "<option value=\"$tile\">" . substr($tile, 0, 1) . "</option>";
+                for ($i = 0; $i < $ct; $i++) {
+                    echo "<option value=\"$tile\">" . substr($tile, 0, 1) . "</option>";
+                }
             }
             ?>
         </select>
         <select name="to">
             <?php
             foreach ($to as $pos) {
-                echo "<option value=\"$pos\">$pos</option>";
+                if (Util::hasNeighbour($pos, $board) || count($board) == 0) {
+                    if (!isset($board[$pos]) || empty($board[$pos])) {
+                        echo "<option value=\"$pos\">$pos</option>";
+                    }
+                }
             }
             ?>
         </select>
@@ -148,14 +156,19 @@ if (!count($to)) $to[] = '0,0';
         <select name="from">
             <?php
             foreach (array_keys($board) as $pos) {
-                echo "<option value=\"$pos\">$pos</option>";
+                $tile = $board[$pos];
+                if ($tile[count($tile) - 1][0] == $player) {
+                    echo "<option value=\"$pos\">$pos</option>";
+                }
             }
             ?>
         </select>
         <select name="to">
             <?php
             foreach ($to as $pos) {
-                echo "<option value=\"$pos\">$pos</option>";
+                if (!isset($board[$pos]) || empty($board[$pos])) {
+                    echo "<option value=\"$pos\">$pos</option>";
+                }
             }
             ?>
         </select>
