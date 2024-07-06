@@ -28,6 +28,7 @@ foreach (Util::$OFFSETS as $pq) {
 }
 $to = array_unique($to);
 if (!count($to)) $to[] = '0,0';
+
 ?>
 <!DOCTYPE html>
 <html>

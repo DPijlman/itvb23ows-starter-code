@@ -27,6 +27,14 @@ class Util {
             return false;
         }
 
+        if (isset($board[$to]) && !empty($board[$to])) {
+            return false;
+        }
+
+        if (!self::isNeighbour($from, $to)) {
+            return false;
+        }
+
         $piece = array_pop($board[$from]);
         $board[$to][] = $piece;
 
