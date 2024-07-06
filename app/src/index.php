@@ -21,63 +21,67 @@ $to = [];
 foreach (Util::$OFFSETS as $pq) {
     foreach ($board_keys as $pos) {
         $pq2 = explode(',', $pos);
-        $to[] = ($pq[0] + $pq2[0]) . ',' . ($pq[1] + $pq2[1]);
+        $new_pos = ($pq[0] + $pq2[0]) . ',' . ($pq[1] + $pq2[1]);
+        if (!isset($board[$new_pos]) || empty($board[$new_pos])) {
+            $to[] = $new_pos;
+        }
     }
 }
 $to = array_unique($to);
 if (!count($to)) $to[] = '0,0';
+
 ?>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Hive</title>
     <style>
-            div.board {
-                width: 60%;
-                height: 100%;
-                min-height: 500px;
-                float: left;
-                overflow: scroll;
-                position: relative;
-            }
+        div.board {
+            width: 60%;
+            height: 100%;
+            min-height: 500px;
+            float: left;
+            overflow: scroll;
+            position: relative;
+        }
 
-            div.board div.tile {
-                position: absolute;
-            }
+        div.board div.tile {
+            position: absolute;
+        }
 
-            div.tile {
-                display: inline-block;
-                width: 4em;
-                height: 4em;
-                border: 1px solid black;
-                box-sizing: border-box;
-                font-size: 50%;
-                padding: 2px;
-            }
+        div.tile {
+            display: inline-block;
+            width: 4em;
+            height: 4em;
+            border: 1px solid black;
+            box-sizing: border-box;
+            font-size: 50%;
+            padding: 2px;
+        }
 
-            div.tile span {
-                display: block;
-                width: 100%;
-                text-align: center;
-                font-size: 200%;
-            }
+        div.tile span {
+            display: block;
+            width: 100%;
+            text-align: center;
+            font-size: 200%;
+        }
 
-            div.player0 {
-                color: black;
-                background: white;
-            }
+        div.player0 {
+            color: black;
+            background: white;
+        }
 
-            div.player1 {
-                color: white;
-                background: black
-            }
+        div.player1 {
+            color: white;
+            background: black
+        }
 
-            div.stacked {
-                border-width: 3px;
-                border-color: red;
-                padding: 0;
-            }
-        </style>
+        div.stacked {
+            border-width: 3px;
+            border-color: red;
+            padding: 0;
+        }
+    </style>
 </head>
 <body>
     <div class="board">
@@ -131,14 +135,20 @@ if (!count($to)) $to[] = '0,0';
         <select name="piece">
             <?php
             foreach ($hand[$player] as $tile => $ct) {
-                echo "<option value=\"$tile\">" . substr($tile, 0, 1) . "</option>";
+                for ($i = 0; $i < $ct; $i++) {
+                    echo "<option value=\"$tile\">" . substr($tile, 0, 1) . "</option>";
+                }
             }
             ?>
         </select>
         <select name="to">
             <?php
             foreach ($to as $pos) {
-                echo "<option value=\"$pos\">$pos</option>";
+                if (Util::hasNeighbour($pos, $board) || count($board) == 0) {
+                    if (!isset($board[$pos]) || empty($board[$pos])) {
+                        echo "<option value=\"$pos\">$pos</option>";
+                    }
+                }
             }
             ?>
         </select>
@@ -148,14 +158,19 @@ if (!count($to)) $to[] = '0,0';
         <select name="from">
             <?php
             foreach (array_keys($board) as $pos) {
-                echo "<option value=\"$pos\">$pos</option>";
+                $tile = $board[$pos];
+                if ($tile[count($tile) - 1][0] == $player) {
+                    echo "<option value=\"$pos\">$pos</option>";
+                }
             }
             ?>
         </select>
         <select name="to">
             <?php
             foreach ($to as $pos) {
-                echo "<option value=\"$pos\">$pos</option>";
+                if (!isset($board[$pos]) || empty($board[$pos])) {
+                    echo "<option value=\"$pos\">$pos</option>";
+                }
             }
             ?>
         </select>

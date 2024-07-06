@@ -1,5 +1,4 @@
 <?php
-
 namespace HiveGame\MoveHandler;
 
 use HiveGame\Util\SessionManager;
@@ -14,8 +13,15 @@ class MoveHandler
 
         $board = SessionManager::get('board');
         $player = SessionManager::get('player');
+        $game_id = SessionManager::get('game_id');
 
-        if (Util::len($board[$from]) > 0 && $board[$from][Util::len($board[$from]) - 1][0] != $player) {
+        if ($game_id === null) {
+            SessionManager::set('error', 'Game ID is not set.');
+            header('Location: index.php');
+            exit;
+        }
+
+        if (count($board[$from]) > 0 && $board[$from][count($board[$from]) - 1][0] != $player) {
             SessionManager::set('error', 'Invalid move: Not your piece.');
             header('Location: index.php');
             exit;
@@ -31,9 +37,10 @@ class MoveHandler
         SessionManager::set('board', $new_board);
         SessionManager::set('player', 1 - $player);
 
-        $db = Database::getConnection();
-        $stmt = $db->prepare('INSERT INTO moves (game_id, player, piece, destination) VALUES (?, ?, ?, ?)');
-        $stmt->bind_param('iiss', SessionManager::get('game_id'), $player, $from, $to);
+        $db = Database::getInstance()->getConnection();
+        $stmt = $db->prepare('INSERT INTO moves (game_id, type, move_from, move_to) VALUES (?, ?, ?, ?)');
+        $move_type = 'move'; // Define the type of move, e.g., 'move' for moving a piece
+        $stmt->bind_param('isss', $game_id, $move_type, $from, $to);
         $stmt->execute();
 
         header('Location: index.php');

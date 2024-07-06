@@ -21,4 +21,27 @@ class Util {
         if (abs($a[0] - $b[0]) == 1 && abs($a[1] - $b[1]) == 1) return true;
         return false;
     }
+
+    public static function slide($board, $from, $to) {
+        if (!isset($board[$from])) {
+            return false;
+        }
+
+        if (isset($board[$to]) && !empty($board[$to])) {
+            return false;
+        }
+
+        if (!self::isNeighbour($from, $to)) {
+            return false;
+        }
+
+        $piece = array_pop($board[$from]);
+        $board[$to][] = $piece;
+
+        if (empty($board[$from])) {
+            unset($board[$from]);
+        }
+
+        return $board;
+    }
 }
