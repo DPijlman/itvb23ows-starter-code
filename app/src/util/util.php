@@ -1,6 +1,8 @@
 <?php
 namespace HiveGame\Util;
 
+use HiveGame\Features\Grasshopper;
+
 class Util {
     public static $OFFSETS = [
         [0, 1], [1, 0], [1, -1], [0, -1], [-1, 0], [-1, 1]
@@ -43,5 +45,9 @@ class Util {
         }
 
         return $board;
+    }
+
+    public static function isValidGrasshopperMove($board, $from, $to) {
+        return Grasshopper::isValidMove($board, $from, $to);
     }
 }
