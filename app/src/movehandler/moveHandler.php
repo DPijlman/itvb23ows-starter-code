@@ -39,7 +39,7 @@ class MoveHandler
 
         $db = Database::getInstance()->getConnection();
         $stmt = $db->prepare('INSERT INTO moves (game_id, type, move_from, move_to) VALUES (?, ?, ?, ?)');
-        $move_type = 'move'; // Define the type of move, e.g., 'move' for moving a piece
+        $move_type = 'move';
         $stmt->bind_param('isss', $game_id, $move_type, $from, $to);
         $stmt->execute();
 
