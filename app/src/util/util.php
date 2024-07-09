@@ -1,8 +1,6 @@
 <?php
 namespace HiveGame\Util;
 
-use HiveGame\Features\Grasshopper;
-
 class Util {
     public static $OFFSETS = [
         [0, 1], [1, 0], [1, -1], [0, -1], [-1, 0], [-1, 1]
@@ -47,7 +45,29 @@ class Util {
         return $board;
     }
 
-    public static function isValidGrasshopperMove($board, $from, $to) {
-        return Grasshopper::isValidMove($board, $from, $to);
+    public static function isSlideMove($board, $from, $to) {
+        if (!self::isNeighbour($from, $to)) {
+            return false;
+        }
+
+        $fromCoords = explode(',', $from);
+        $toCoords = explode(',', $to);
+
+        $adjacentSpaces = 0;
+        foreach (self::$OFFSETS as $offset) {
+            $neighbor = ($toCoords[0] + $offset[0]) . ',' . ($toCoords[1] + $offset[1]);
+            if (isset($board[$neighbor])) {
+                $adjacentSpaces++;
+            }
+        }
+        return $adjacentSpaces >= 1 && $adjacentSpaces <= 2;
+    }
+
+    public static function coordsToString($coords) {
+        return $coords[0] . ',' . $coords[1];
+    }
+
+    public static function stringToCoords($str) {
+        return array_map('intval', explode(',', $str));
     }
 }
