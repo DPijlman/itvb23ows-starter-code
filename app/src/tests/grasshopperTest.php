@@ -11,7 +11,7 @@ class GrasshopperTest extends TestCase {
             '2,0' => [[0, 'grasshopper']]
         ];
         $from = '2,0';
-        $to = '-1,0'; // Changed the destination to an empty space
+        $to = '-1,0';
 
         // Act
         $result = Grasshopper::isValidMove($board, $from, $to);
