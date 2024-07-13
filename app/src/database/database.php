@@ -9,7 +9,11 @@ class Database
     private function __construct($connection = null)
     {
         if ($connection === null) {
-            $this->connection = new \mysqli('ows-db1', 'owsuser', 'Ows1234user', 'hive');
+            $host = getenv('HOST') ?: 'ows-db1';
+            $user = getenv('USER') ?: 'owsuser';
+            $password = getenv('PASSWORD') ?: 'Ows1234user';
+            $dbName = getenv('NAME') ?: 'hive';
+            $this->connection = new \mysqli($host, $user, $password, $dbName);
             if ($this->connection->connect_error) {
                 die('Connection failed: ' . $this->connection->connect_error);
             }
