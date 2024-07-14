@@ -20,6 +20,12 @@ class PlayHandler {
         self::updateTurns($turns, $player);
         self::saveState($board, $hand, $player, $turns);
 
+        // Check win condition
+        $winner = Util::checkWinCondition($board);
+        if ($winner) {
+            SessionManager::set('winner', $winner);
+        }
+
         return true;
     }
 
@@ -29,7 +35,7 @@ class PlayHandler {
             return false;
         }
 
-        if ($turn >= 3 && !self::queenPlayed($hand, $player) && $piece != 'Q') {
+        if ($turn >= 3 && !Util::queenPlayed($board, $player) && $piece != 'Q') {
             SessionManager::set('error', 'You must play the queen by your fourth turn.');
             return false;
         }
@@ -65,9 +71,5 @@ class PlayHandler {
         SessionManager::set('hand', $hand);
         SessionManager::set('player', 1 - $player);
         SessionManager::set('turns', $turns);
-    }
-
-    private static function queenPlayed($hand, $player) {
-        return isset($hand[$player]['Q']) && $hand[$player]['Q'] == 0;
     }
 }

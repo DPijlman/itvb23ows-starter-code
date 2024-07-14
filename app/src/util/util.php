@@ -71,18 +71,56 @@ class Util {
         return array_map('intval', explode(',', $str));
     }
 
-    public static function isCompletelySurrounded($position, $board) {
+    public static function checkWinCondition($board) {
+        $queens = [];
+        foreach ($board as $position => $stack) {
+            foreach ($stack as $piece) {
+                if ($piece[1] == 'Q') {
+                    $queens[$piece[0]] = $position;
+                }
+            }
+        }
+
+        $surrounded = [0 => false, 1 => false];
+        foreach ($queens as $player => $position) {
+            if (self::isQueenSurrounded($board, $position)) {
+                $surrounded[$player] = true;
+            }
+        }
+
+        if ($surrounded[0] && $surrounded[1]) {
+            return 'draw';
+        } elseif ($surrounded[0]) {
+            return 'player1';
+        } elseif ($surrounded[1]) {
+            return 'player0';
+        }
+
+        return null;
+    }
+
+    public static function isQueenSurrounded($board, $position) {
         foreach (self::$OFFSETS as $offset) {
-            $neighbor = self::getNeighborCoords($position, $offset);
-            if (!isset($board[$neighbor])) {
+            $neighborPos = self::stringToCoords($position);
+            $neighborPos[0] += $offset[0];
+            $neighborPos[1] += $offset[1];
+            $neighborStr = self::coordsToString($neighborPos);
+
+            if (!isset($board[$neighborStr])) {
                 return false;
             }
         }
         return true;
     }
 
-    private static function getNeighborCoords($coords, $offset) {
-        $coords = explode(',', $coords);
-        return ($coords[0] + $offset[0]) . ',' . ($coords[1] + $offset[1]);
+    public static function queenPlayed($board, $player) {
+        foreach ($board as $stack) {
+            foreach ($stack as $piece) {
+                if ($piece[0] == $player && $piece[1] == 'Q') {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
