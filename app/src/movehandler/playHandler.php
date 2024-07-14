@@ -9,21 +9,30 @@ class PlayHandler {
         $board = SessionManager::get('board');
         $player = SessionManager::get('player');
         $hand = SessionManager::get('hand');
+        $turns = SessionManager::get('turns');
 
-        if (!self::validatePlay($piece, $position, $hand, $player, $board)) {
+        if (!self::validatePlay($piece, $position, $hand, $player, $board, $turns[$player])) {
             return false;
         }
 
         self::updateBoard($board, $player, $piece, $position);
         self::updateHand($hand, $player, $piece);
-        self::saveState($board, $hand, $player);
+        self::updateTurns($turns, $player);
+        self::saveState($board, $hand, $player, $turns);
 
         return true;
     }
 
-    private static function validatePlay($piece, $position, $hand, $player, $board) {
-        if (!isset($hand[$player][$piece]) || !$hand[$player][$piece]) {
+    private static function validatePlay($piece, $position, $hand, $player, $board, $turn) {
+        if (!isset($hand[$player][$piece]) || $hand[$player][$piece] <= 0) {
             SessionManager::set('error', 'Invalid piece.');
+            return false;
+        }
+
+        error_log("Turn: $turn, Queen Played: " . (self::queenPlayed($hand, $player) ? 'Yes' : 'No'));
+
+        if ($turn >= 3 && !self::queenPlayed($hand, $player) && $piece != 'Q') {
+            SessionManager::set('error', 'You must play the queen by your fourth turn.');
             return false;
         }
 
@@ -49,9 +58,18 @@ class PlayHandler {
         }
     }
 
-    private static function saveState($board, $hand, $player) {
+    private static function updateTurns(&$turns, $player) {
+        $turns[$player]++;
+    }
+
+    private static function saveState($board, $hand, $player, $turns) {
         SessionManager::set('board', $board);
         SessionManager::set('hand', $hand);
         SessionManager::set('player', 1 - $player);
+        SessionManager::set('turns', $turns);
+    }
+
+    private static function queenPlayed($hand, $player) {
+        return isset($hand[$player]['Q']) && $hand[$player]['Q'] == 0;
     }
 }

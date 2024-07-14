@@ -14,6 +14,7 @@ class RestartHandler {
             1 => ["Q" => 1, "B" => 2, "S" => 2, "A" => 3, "G" => 3]
         ];
         $_SESSION['player'] = 0;
+        $_SESSION['turns'] = [0, 0];
 
         $db = Database::getInstance()->getConnection();
         $stmt = $db->prepare('INSERT INTO games VALUES ()');
