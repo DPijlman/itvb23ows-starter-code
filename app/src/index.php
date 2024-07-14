@@ -15,6 +15,12 @@ $board = SessionManager::get('board');
 $player = SessionManager::get('player');
 $hand = SessionManager::get('hand');
 
+$winner = Util::checkWinCondition($board);
+if ($winner) {
+    echo $winner === 'draw' ? 'It\'s a draw!' : ($winner === 'player0' ? 'Player 0 (White)' : 'Player 1 (Black)') . ' wins!';
+    exit;
+}
+
 $board_keys = array_keys($board);
 $to = [];
 foreach (Util::$OFFSETS as $pq) {
@@ -85,6 +91,11 @@ if (!count($to)) $to[] = '0,0';
 <body>
     <div class="board">
         <?php
+        if (isset($_SESSION['winner'])) {
+            echo "<div class='winner'>{$_SESSION['winner']}</div>";
+            unset($_SESSION['winner']);
+        }
+        
         $min_p = 1000;
         $min_q = 1000;
         foreach ($board as $pos => $tile) {

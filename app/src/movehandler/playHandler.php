@@ -6,6 +6,8 @@ use HiveGame\Util\Util;
 
 class PlayHandler {
     public static function play($piece, $position) {
+        SessionManager::startSession();
+        
         $board = SessionManager::get('board');
         $player = SessionManager::get('player');
         $hand = SessionManager::get('hand');
@@ -23,7 +25,8 @@ class PlayHandler {
         // Check win condition
         $winner = Util::checkWinCondition($board);
         if ($winner) {
-            SessionManager::set('winner', $winner);
+            SessionManager::set('winner', $winner === 'draw' ? 'It\'s a draw!' : ($winner === 'player0' ? 'Player 0 (White)' : 'Player 1 (Black)') . ' wins!');
+            return false;
         }
 
         return true;
