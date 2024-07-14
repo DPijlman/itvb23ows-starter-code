@@ -33,7 +33,7 @@ class QueenSurroundedTest extends TestCase
         SessionManager::set('board', $board);
 
         // Act
-        $result = Util::isCompletelySurrounded('0,0', $board);
+        $result = Util::isQueenSurrounded($board, '0,0');
 
         // Assert
         $this->assertTrue($result);
@@ -54,7 +54,7 @@ class QueenSurroundedTest extends TestCase
         SessionManager::set('board', $board);
 
         // Act
-        $result = Util::isCompletelySurrounded('0,0', $board);
+        $result = Util::isQueenSurrounded($board, '0,0');
 
         // Assert
         $this->assertFalse($result);
