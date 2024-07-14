@@ -70,4 +70,19 @@ class Util {
     public static function stringToCoords($str) {
         return array_map('intval', explode(',', $str));
     }
+
+    public static function isCompletelySurrounded($position, $board) {
+        foreach (self::$OFFSETS as $offset) {
+            $neighbor = self::getNeighborCoords($position, $offset);
+            if (!isset($board[$neighbor])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static function getNeighborCoords($coords, $offset) {
+        $coords = explode(',', $coords);
+        return ($coords[0] + $offset[0]) . ',' . ($coords[1] + $offset[1]);
+    }
 }

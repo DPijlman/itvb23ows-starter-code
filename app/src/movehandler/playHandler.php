@@ -53,5 +53,10 @@ class PlayHandler {
         SessionManager::set('board', $board);
         SessionManager::set('hand', $hand);
         SessionManager::set('player', 1 - $player);
+        SessionManager::set('turns', $turns);
+    }
+
+    private static function queenPlayed($hand, $player) {
+        return !isset($hand[$player]['Q']);
     }
 }
