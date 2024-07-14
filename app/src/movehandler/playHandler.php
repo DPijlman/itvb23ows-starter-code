@@ -29,8 +29,6 @@ class PlayHandler {
             return false;
         }
 
-        error_log("Turn: $turn, Queen Played: " . (self::queenPlayed($hand, $player) ? 'Yes' : 'No'));
-
         if ($turn >= 3 && !self::queenPlayed($hand, $player) && $piece != 'Q') {
             SessionManager::set('error', 'You must play the queen by your fourth turn.');
             return false;

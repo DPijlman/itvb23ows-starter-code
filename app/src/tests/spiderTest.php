@@ -7,25 +7,6 @@ use PHPUnit\Framework\TestCase;
 use HiveGame\Features\Spider;
 
 class SpiderTest extends TestCase {
-    public function testSpiderValidMove() {
-        // Arrange
-        $board = [
-            '0,0' => [[0, 'spider']],
-            '1,0' => [[1, 'queen']],
-            '2,0' => [[0, 'beetle']],
-            '3,0' => [],
-            '4,0' => []
-        ];
-        $from = '0,0';
-        $to = '3,0';
-
-        // Act
-        $result = Spider::isValidMove($board, $from, $to);
-
-        // Assert
-        $this->assertTrue($result);
-    }
-
     public function testSpiderInvalidMoveToSamePosition() {
         // Arrange
         $board = [
@@ -77,5 +58,23 @@ class SpiderTest extends TestCase {
 
         // Assert
         $this->assertFalse($result);
+    }
+    public function testSpiderValidMove() {
+        // Arrange
+        $board = [
+            '0,0' => [[0, 'spider']],
+            '1,0' => [[1, 'queen']],
+            '2,0' => [[0, 'beetle']],
+            '3,0' => [],
+            '4,0' => []
+        ];
+        $from = '0,0';
+        $to = '3,0';
+
+        // Act
+        $result = Spider::isValidMove($board, $from, $to);
+
+        // Assert
+        $this->assertTrue($result);
     }
 }
